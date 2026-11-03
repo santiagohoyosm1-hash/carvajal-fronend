@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Deseo, Movimiento, Notificacion, Producto } from './models';
 
 /** Todas las rutas pasan por el gateway (/api → http://localhost:8080 con proxy.conf.json). */
-@Injectable({ providedIn: 'root' })
+@Injectable({ providedIn:'root' })
 export class Api {
   private readonly http = inject(HttpClient);
 
