@@ -1,11 +1,8 @@
 {
-  "framework": "angular",
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist/frontend/browser",
   "rewrites": [
     {
-      "source": "/api/wishlist/:path*",
-      "destination": "https://carvajal-backend-production.up.railway.app/api/wishlist/:path*"
+      "source": "/api/:path*",
+      "destination": "https://carvajal-backend-production.up.railway.app/api/:path*"
     },
     {
       "source": "/((?!api/).*)",
