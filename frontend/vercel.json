@@ -1,9 +1,20 @@
 {
-  "outputDirectory": "dist/frontend/browser",
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://carvajal-backend-production.up.railway.app/api/:path*"
+      "source": "/api/wishlist/:path*",
+      "destination": "https://carvajal-backend-production-178d.up.railway.app/api/wishlist/:path*"
+    },
+    {
+      "source": "/api/productos/:path*",
+      "destination": "https://ms-productos-production-44a6.up.railway.app/api/productos/:path*"
+    },
+    {
+      "source": "/api/historial/:path*",
+      "destination": "https://ms-historial-production.up.railway.app/api/historial/:path*"
+    },
+    {
+      "source": "/api/notificaciones/:path*",
+      "destination": "https://ms-notificaciones-production-9354.up.railway.app/api/notificaciones/:path*"
     },
     {
       "source": "/((?!api/).*)",
