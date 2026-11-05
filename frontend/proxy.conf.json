@@ -1,11 +1,7 @@
 {
-  "/api/wishlist": {
-    "target": "https://carvajal-backend-production.up.railway.app",
-    "secure": true,
-    "changeOrigin": true
-  },
   "/api": {
     "target": "http://localhost:8080",
-    "secure": false
+    "secure": false,
+    "changeOrigin": true
   }
 }

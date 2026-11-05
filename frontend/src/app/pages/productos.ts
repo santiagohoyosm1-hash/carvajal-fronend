@@ -143,7 +143,7 @@ import { Store } from '../store';
 
         <label class="check">
           <input type="checkbox" formControlName="activo" />
-          <span>Producto activo (se puede agregar a listas)</span>
+          <span>Producto activo (si lo desactivas, deja de aparecer en el catálogo)</span>
         </label>
 
         @if (errorForm()) {

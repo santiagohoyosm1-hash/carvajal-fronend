@@ -1,32 +1,24 @@
 import { Injectable, computed, effect, inject, signal, untracked } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Api } from './api';
+import { Auth } from './auth';
 import { CONFIG } from './config';
 import { mensajeError } from './errores';
 import { Deseo, Movimiento, Notificacion, Producto } from './models';
 
-const CLAVE_USUARIO = 'wishlist.usuarioId';
-
-function usuarioGuardado(): number {
-  try {
-    const n = Number(localStorage.getItem(CLAVE_USUARIO));
-    return Number.isInteger(n) && n >= 1 ? n : 1;
-  } catch {
-    return 1;
-  }
-}
-
 @Injectable({ providedIn: 'root' })
 export class Store {
   private readonly api = inject(Api);
+  private readonly auth = inject(Auth);
 
-  readonly usuarioId = signal(usuarioGuardado());
+  /** Usuario de la sesión actual (viene del login); null si no hay sesión. */
+  readonly usuarioId = computed(() => this.auth.sesion()?.usuarioId ?? null);
   readonly productos = signal<Producto[]>([]);
   readonly deseos = signal<Deseo[]>([]);
   readonly historial = signal<Movimiento[]>([]);
   readonly notificaciones = signal<Notificacion[]>([]);
 
-  readonly cargando = signal(true);
+  readonly cargando = signal(false);
   readonly ocupado = signal(false);
   readonly avisos = signal<string[]>([]);
 
@@ -35,20 +27,27 @@ export class Store {
   readonly noLeidas = computed(() => this.notificaciones().filter((n) => !n.leida).length);
 
   constructor() {
-    void this.cargarProductos();
+    // Carga los datos al iniciar sesión (o al cambiar de usuario) y los limpia al cerrarla.
     effect(() => {
       const id = this.usuarioId();
-      try {
-        localStorage.setItem(CLAVE_USUARIO, String(id));
-      } catch {
-        /* sin almacenamiento: se usa el valor en memoria */
-      }
-      untracked(() => void this.cargarUsuario(id));
+      untracked(() => {
+        if (id === null) {
+          this.limpiar();
+          return;
+        }
+        void this.cargarProductos();
+        void this.cargarUsuario(id);
+      });
     });
   }
 
-  cambiarUsuario(id: number) {
-    this.usuarioId.set(id);
+  private limpiar() {
+    this.productos.set([]);
+    this.deseos.set([]);
+    this.historial.set([]);
+    this.notificaciones.set([]);
+    this.avisos.set([]);
+    this.cargando.set(false);
   }
 
   descartarAvisos() {
@@ -56,6 +55,7 @@ export class Store {
   }
 
   private avisar(texto: string) {
+    if (this.auth.sesion() === null) return; // la sesión ya se cerró: el login explica por qué
     this.avisos.update((l) => (l.includes(texto) ? l : [...l, texto]));
   }
 
@@ -123,6 +123,7 @@ export class Store {
 
   async agregar(p: Producto) {
     const usuarioId = this.usuarioId();
+    if (usuarioId === null) return;
     await this.ejecutar('No se pudo agregar a tu lista', async () => {
       const d = await firstValueFrom(
         this.api.agregarDeseo({ usuarioId, productoId: p.id!, cantidadDeseada: 1 }),

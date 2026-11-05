@@ -10,7 +10,7 @@ import { Store } from '../store';
     <div class="encabezado">
       <div>
         <h1>Mi lista</h1>
-        <p class="ayuda">Productos que deseas, usuario {{ store.usuarioId() }}.</p>
+        <p class="ayuda">Productos que deseas.</p>
       </div>
     </div>
 
@@ -44,7 +44,7 @@ import { Store } from '../store';
                 }
               } @else {
                 <strong class="nombre">Producto {{ f.deseo.productoId }}</strong>
-                <span class="aviso-stock">Ya no está en el catálogo.</span>
+                <span class="aviso-stock">Este producto ya no está disponible.</span>
               }
             </div>
             <span class="num">

@@ -63,11 +63,11 @@ a { color: var(--azul); }
 }
 .activo .contador { background: rgb(0 0 0 / 0.12); }
 .contador.alerta { background: var(--margen); color: #fff; }
-.usuario { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; color: #cdd5e4; }
-.barra .usuario input[type='number'] {
-  width: 4.5rem; padding: 0.3rem 0.5rem; border-radius: 4px; border: 1px solid #44506a;
-  background: #263149; color: #fff; font: inherit;
-}
+.sesion { display: inline-flex; align-items: center; gap: 0.75rem; margin-left: auto; color: #cdd5e4; font-size: 0.95rem; }
+.quien { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 600; color: #fff; }
+.rol { padding: 0.05rem 0.5rem; border-radius: 99px; font-size: 0.75rem; font-weight: 700; background: var(--marcador); color: var(--tinta); }
+.barra .btn.salir { background: transparent; border-color: #44506a; color: #cdd5e4; padding: 0.4rem 0.8rem; }
+.barra .btn.salir:hover:not(:disabled) { background: rgb(255 255 255 / 0.08); border-color: #6b7a99; color: #fff; }
 
 /* ---------- Hoja (margen de cuaderno) ---------- */
 .hoja {
@@ -108,7 +108,7 @@ a { color: var(--azul); }
 
 .campo { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
 .campo > span { font-weight: 600; font-size: 0.9rem; }
-input[type='text'], input[type='number'], input[type='search'] {
+input[type='text'], input[type='number'], input[type='search'], input[type='password'] {
   font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #b9c4d6; border-radius: 4px;
   background: #fff; color: var(--tinta); width: 100%;
 }
@@ -189,4 +189,13 @@ div.estado p { margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
   * { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
+}
+
+/* ---------- Login ---------- */
+.login { max-width: 26rem; margin: 1.5rem 0; }
+.login form { margin-top: 1.5rem; }
+.login .btn { width: 100%; padding: 0.8rem 1rem; margin-top: 0.5rem; }
+.aviso-login {
+  margin: 1.25rem 0 0; padding: 0.7rem 1rem; border-left: 4px solid var(--marcador);
+  background: color-mix(in srgb, var(--marcador) 25%, transparent); border-radius: 0 4px 4px 0;
 }
