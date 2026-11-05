@@ -1,31 +1,39 @@
 # Wishlist · Frontend (Angular 22)
 
-Interfaz para el back `carvajal-wishlist-microservicios`. No modifica el back: todas las
-llamadas van a `/api/...` y el servidor de desarrollo las reenvía al gateway
-(`http://localhost:8080`) con `proxy.conf.json`, así que no depende de CORS.
+Interfaz para el back `carvajal-backend` (gateway + microservicios con JWT).
 
 ## Requisitos
-Node 20.19+ (o 22) y npm. Back arriba: `docker compose up -d` y los 5 servicios Spring Boot.
+Node 20.19+ (o 22) y npm. Para probar en local, el back arriba con el gateway en `http://localhost:8080`.
 
 ## Ejecutar
 ```
 npm install
 npm start        # http://localhost:4200
 ```
+`proxy.conf.json` reenvía `/api/*` al gateway local (`localhost:8080`), así no hay problemas de CORS.
+
+## Sesión (JWT)
+- Pantalla de login (`POST /api/auth/login`). Sin sesión, cualquier ruta redirige a `/login`.
+- El token se guarda en `sessionStorage` (se borra al cerrar la pestaña) y un interceptor lo envía en
+  `Authorization: Bearer ...` en cada llamada a `/api`.
+- Si el token vence (15 minutos) o el back responde 401, se cierra la sesión y el login lo avisa.
+- El `usuarioId` sale de la respuesta del login; ya no hay selector de usuario.
+- Las cuentas las crea el administrador en el back (`POST /api/auth/users`); el front no registra usuarios.
 
 ## Pantallas
 - **Catálogo** (`/api/productos`): listar, buscar, crear, editar, eliminar y agregar a mi lista.
-- **Mi lista** (`/api/wishlist/{usuarioId}`): cambiar cantidad, quitar, total estimado.
+  El back solo lista productos activos; al desactivar uno deja de aparecer.
+- **Mi lista** (`/api/wishlist/{usuarioId}`): cambiar cantidad (valida stock en el back), quitar, total.
 - **Historial** (`/api/historial/{usuarioId}`).
 - **Notificaciones** (`/api/notificaciones/{usuarioId}`): marcar como leída.
 
-El back no tiene login: el usuario se elige arriba a la derecha (número, se guarda en el navegador).
-
 ## Historial
-El back aún no genera movimientos solo. Por eso el front registra uno (`POST /api/historial`)
-al agregar, cambiar o quitar un deseo. Cuando el back lo haga por RabbitMQ, pon
-`registrarHistorialDesdeFront: false` en `src/app/config.ts` para no duplicar.
+`ms-wishlist` no registra movimientos por sí mismo: el front envía `POST /api/historial` al agregar,
+cambiar o quitar un deseo. `ms-historial` publica el evento en RabbitMQ y `ms-notificaciones` crea la
+notificación. Si el back pasa a registrarlos solo, pon `registrarHistorialDesdeFront: false` en
+`src/app/config.ts`.
 
-## Producción
-`npm run build` genera `dist/`. El proxy solo existe en `ng serve`; en un servidor real
-(nginx, etc.) hay que reenviar `/api` al gateway.
+## Despliegue en Vercel
+- Root Directory `frontend`, Build Command `npm run build`, Output Directory `dist/frontend/browser`.
+- `vercel.json` reenvía `/api/*` al gateway en Railway y deja el resto a Angular. El destino debe ser
+  el dominio público del **gateway** (no el de los microservicios). Si cambia, edita esa línea.

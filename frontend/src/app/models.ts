@@ -35,3 +35,19 @@ export interface Notificacion {
   leida: boolean;
   fecha: string;
 }
+
+export interface LoginResponse {
+  accessToken: string;
+  tokenType: string;
+  expiresIn: number; // segundos
+  usuarioId: number;
+  role: string;
+}
+
+export interface Sesion {
+  accessToken: string;
+  usuarioId: number;
+  role: string;
+  username: string;
+  expiraEn: number; // marca de tiempo en milisegundos
+}

@@ -9,7 +9,7 @@ import { Store } from '../store';
     <div class="encabezado">
       <div>
         <h1>Notificaciones</h1>
-        <p class="ayuda">Avisos del usuario {{ store.usuarioId() }}.</p>
+        <p class="ayuda">Avisos de tu cuenta.</p>
       </div>
     </div>
 
